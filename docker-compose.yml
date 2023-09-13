@@ -1,0 +1,42 @@
+version: '3.1'
+
+services:
+  # Service de base de donnée mysql
+  db:
+    image: mysql
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: nftmarket
+      MYSQL_USER: nftmarket_user
+      MYSQL_PASSWORD: toor
+    restart: always
+    volumes:
+      - db_volume_nftmarket:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+# service phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    depends_on: 
+      - db
+    links:
+      - db
+    ports:
+      - 8001:80
+    environment:
+      MYSQL_USER: nftmarket_user
+      MYSQL_PASSWORD: toor
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - 8025:8025
+      - 1025:1025
+
+# my db_volume
+volumes:
+  db_volume_nftmarket:
